@@ -7,16 +7,45 @@
   <link rel="stylesheet" href="css/normalize.css">
   <link rel="stylesheet" href="css/main.css">
 </head>
-<script type="text/javascript">
-  // 1. Create a HTML Form Object with JavaScript
-  var form = document.createElement("form");
-  form.setAttribute("method", "POST");
-  form.setAttribute("accept-charset", "utf-8");
-  form.setAttribute("action", "");
-  form.setAttribute("id", "myform");
-</script>
+
 <body>
-  
+  <script type="text/javascript">
+    // 1. Create a HTML Form Object with JavaScript
+    var form = document.createElement("form");
+    form.setAttribute("method", "POST");
+    form.setAttribute("accept-charset", "utf-8");
+    form.setAttribute("action", "");
+    form.setAttribute("id", "myform");
+
+    // 2.Create an HTML Username Input Object with Javascript
+    var input_username = document.createElement("input");
+    input_username.setAttribute("name", "username");
+    input_username.setAttribute("type", "text");
+    input_username.setAttribute("id", "username");
+    
+    // 3. Create a HTML Password Input Object with Javascript
+    var input_password = document.createElement("input");
+    input_password.setAttribute("name", "password");
+    input_password.setAttribute("type", "password");
+    input_password.setAttribute("id", "password");
+    
+    // 4. Create a HTML Submit-Button Object with Javascript
+    var input_submit_button = document.createElement("input");
+    input_submit_button.setAttribute("name", "submit");
+    input_submit_button.setAttribute("type", "log in");
+    input_submit_button.setAttribute("id", "submit");
+    
+    // 5. Add all Elements to the Form
+    form.appendChild(input_username);
+    form.appendChild(document.createElement("br"));
+    form.appendChild(input_password);
+    form.appendChild(document.createElement("br"));
+    form.appendChild(document.createElement("br"));
+    form.appendChild(input_submit_button);
+    
+    // 7. Add the Form Object with all its children to the HTML Document-Object
+    document.getElementsByTagName('body')[0].appendChild(form);
+</script>
 </body>
 
 </html>
