@@ -1,0 +1,37 @@
+﻿@model IEnumerable<logging_audit_trails.Models.HomeControllerViewModel>
+@{
+    ViewBag.Title = "Logs";
+}
+<h2>Logs</h2>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.UserId);
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LogId);
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LogCreatedOn)
+        </th>
+        <th></th>
+    </tr>
+    @if (Model != null)
+    {
+        foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LogId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LogCreatedOn)
+                </td>
+                <td></td>
+            </tr>
+        }
+    }
+</table>
