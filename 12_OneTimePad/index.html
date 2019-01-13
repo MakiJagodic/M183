@@ -1,0 +1,203 @@
+<!doctype html>
+<html class="no-js" lang="">
+	<head>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+	</head>
+
+	<body>
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12">
+					<h1>One Time Pad</h1>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-6">
+					<br />
+					<legend>Plaintext</legend>
+					<textarea id="plaintext" class="form-control"></textarea><br />
+					<button class="btn btn-primary" id="analyze_plaintext">Analyze Plaintext</button><br /><br />
+					<button class="btn btn-primary" id="encrypt">encrypt</button>
+				</div>
+				<div class="col-md-6">
+					<br />
+					<legend>Histogram Plaintext</legend>
+					<div id="chart_plaintext"></div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-md-12"><br /><br /></div>
+			</div>
+			<div class="row">
+				<div class="col-md-6">
+					<br />
+					<legend>Ciphertext</legend>
+                    Generated One-Time-Pad: <span id="key_onetime_pad"></span>
+                    <textarea id="ciphertext" class="form-control"></textarea><br />
+					<button class="btn btn-primary" id="analyze_ciphertext">Analyze Ciphertext</button><br /><br />
+					<button class="btn btn-primary" id="decrypt">decrypt</button> using key
+					<input name="backshift" id="decryptkey" value="" type="text" class="form-control" style="width:200px;display:inline-block;"/>
+				</div>
+				<div class="col-md-6">
+					<br />
+					<legend>Histogram Ciphertext</legend>
+					<div id="chart_ciphertext"></div>
+				</div>
+			</div>
+		</div>
+
+		<script>
+            document.getElementById("analyze_plaintext").addEventListener("click", function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                var text = document.getElementById("plaintext").value;
+                var histogram = createHistogramValues(text);
+
+                document.getElementById("chart_plaintext").innerHTML = createHTMLTable(histogram);
+            });
+
+            document.getElementById("encrypt").addEventListener("click", function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                var plaintext = document.getElementById("plaintext").value;
+                var encrypted_values = encryptOneTimePad(plaintext);
+                document.getElementById("ciphertext").innerHTML = encrypted_values.ciphertext;
+                document.getElementById("key_onetime_pad").innerHTML = encrypted_values.key;
+            });
+
+            function createHistogramValues(text)
+            {
+                var histogram_prepare = [];
+                for (var i = 0, len = text.length; i < len; i++) {
+                    var letter = text[i];
+                    if (letter.match(/[a-z]/i)) {
+                        histogram_prepare[letter] = (histogram_prepare[letter] || 0) + 1;
+                    }
+                }
+
+                histogram = histogram_prepare.sort(function (a, b) {
+                    a = a[1];
+                    b = b[1];
+
+                    return a < b ? -1 : (a > b ? 1 : 0);
+                });
+
+                return histogram;
+            }
+
+            function createHTMLTable(histogram)
+            {
+                var html = "<table>";
+                for (var key in histogram) {
+                    html += "<tr>";
+                    html += "<td>" + key + ": </td><td>&nbsp;</td>";
+                    html += "<td>" + histogram[key] + "</td>";
+                    html += "</tr>";
+                }
+                html += "</table>";
+                return html;
+            }
+
+            function encryptOneTimePad(input)
+            {
+                var key = '';
+
+                for (var k = 0; k < input.length; k++)
+                {
+                    var c = input[k].charCodeAt(0);
+
+                    if ((c >= 65) && (c <= 90))
+                    {
+                        key += String.fromCharCode(Math.floor(Math.random() * 26) + 65);
+                    }
+                    else if ((c >= 97) && (c <= 122))
+                    {
+                        key += String.fromCharCode(Math.floor(Math.random() * 26) + 97);
+                    }
+                }
+
+                var output = "";
+                for (var i = 0; i < input.length; i++)
+                {
+                    var char = input[i];
+
+                    if (char.match(/[a-z]/i))
+                    {
+                        var c = parseInt(input.charCodeAt(i));
+                        var key_char_shift = parseInt(key.charCodeAt(i));
+
+                        if ((c >= 65) && (c <= 90))
+                        {
+                            output += String.fromCharCode((c - 65 + key_char_shift - 65) % 26 + 65);
+                        }
+                        else if ((c >= 97) && (c <= 122))
+                        {
+                            output += String.fromCharCode((c - 97 + key_char_shift - 97) % 26 + 97)
+                        }
+                    }
+                }
+                return { "ciphertext": output, "key": key };
+            }
+
+            function decryptOneTimePad(input, key)
+            {
+                var output = "";
+                for (var i = 0; i < input.length; i++)
+                {
+                    var char = input[i];
+
+                    if (char.match(/[a-z]/i))
+                    {
+                        var cr = parseInt(input.charCodeAt(i));
+
+                        if ((cr >= 65) && (cr <= 90))
+                        {
+                            var c = parseInt(cr - 65);
+                            var key_char_shift = parseInt(key[i].charCodeAt(0) - 65);
+
+                            var new_char_position = (c - key_char_shift) % 26;
+                            if (new_char_position < 0)
+                                new_char_position += 26;
+
+                            output += String.fromCharCode(new_char_position + 65);
+                        }
+                        else if ((cr >= 97) && (cr <= 122))
+                        {
+                            var c = parseInt(cr - 97);
+                            var key_char_shift = parseInt(key[i].charCodeAt(0) - 97);
+
+                            var new_char_position = (c - key_char_shift) % 26;
+                            if (new_char_position < 0)
+                                new_char_position += 26;
+
+                            output += String.fromCharCode(new_char_position + 97);
+                        }
+                    }
+                }
+                return output;
+            }
+
+            document.getElementById("analyze_ciphertext").addEventListener("click", function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                var text = document.getElementById("ciphertext").value;
+                var histogram = createHistogramValues(text);
+
+                document.getElementById("chart_ciphertext").innerHTML = createHTMLTable(histogram);
+            });
+
+            document.getElementById("decrypt").addEventListener("click", function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                var plaintext = document.getElementById("ciphertext").value;
+                var key = document.getElementById("decryptkey").value;
+                document.getElementById("ciphertext").innerHTML = decryptOneTimePad(plaintext, key);
+            });
+		</script>
+	</body>
+</html>

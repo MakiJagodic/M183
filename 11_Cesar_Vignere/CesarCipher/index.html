@@ -1,0 +1,146 @@
+<!doctype html>
+<html class="no-js" lang="">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"/>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <h1>Cesar Cipher</h1>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <br>
+                <legend>Plaintext</legend>
+                <textarea id="plaintext" class="form-control"></textarea><br>
+                <button class="btn btn-primary" id="analyze_plaintext">Analyze Plaintext</button> <br><br>
+                <button class="btn btn-primary" id="encrypt">encrypt</button> using shift <input name="shift" id="shift" value="" type="text"/>
+            </div>
+
+            <div class="col-md-6">
+                <br>
+                <legend>Histogramm Plaintext</legend>
+                <div id="chart_plaintext"></div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12"><br><br></div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <br>
+                <legend>Ciphertext</legend>
+                <textarea id="ciphertext" class="form-control"></textarea><br>
+                <button class="btn btn-primary" id="analyze_ciphertext">Analyze Ciphertext</button> <br><br>
+                <button class="btn btn-primary" id="decrypt">decrypt</button> using backshift <input name="backshift" id="backshift" value="" type="text"/>
+            </div>
+
+            <div class="col-md-6">
+                <br>
+                <legend>Histogram Ciphertext</legend>
+                <div id="chart_ciphertext"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("analyze_plaintext").addEventListener("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            var text = document.getElementById("plaintext").value;
+            var histogram = createHistogramValues(text);
+
+            document.getElementById("chart_plaintext").innerHTML = createHTMLTable(histogram);
+        });
+
+        document.getElementById("encrypt").addEventListener("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            var plaintext = document.getElementById("plaintext").value;
+            var shift = document.getElementById("shift").value;
+
+            document.getElementById("ciphertext").innerHTML = createAlphabeticalShift(plaintext, shift);
+        });
+
+        function createHistogramValues(text) {
+            var histogram_prepare = [];
+
+            for (var i = 0, len = text.length; i < len; i++) {
+                var letter = text[i];
+                if (letter.match(/[a-z]/i)) {
+                    histogram_prepare[letter] = (histogram_prepare[letter] || 0) + 1;
+                }
+            }
+
+            histogram = histogram_prepare.sort(function (a, b) {
+                a = a[1];
+                b = b[1];
+
+                return a < b ? -1 : (a > b ? 1 : 0);
+            });
+
+            return histogram;
+        }
+
+        function createHTMLTable(histogram) {
+            var html = "<table>";
+            for (var key in histogram) {
+                html += "<tr>";
+                html += "<td>" + key + ": </td><td>&nbsp;</td>";
+                html += "<td>" + histogram[key] + "</td>";
+                html += "</tr>";
+            }
+            html += "</table>";
+            return html;
+        }
+
+        function createAlphabeticalShift(text, shift) {
+            shift = parseInt(shift);
+            if (shift < 0) shift = 26 + shift;
+
+            var output = "";
+
+            for (var i = 0; i < text.length; i++) {
+                var c = text[i];
+                var tempchar = "";
+
+                if (c.match(/[a-z]/i)) {
+                    var code = text.charCodeAt(i);
+                    if ((code >= 65) && (code <= 90))
+                        tempchar = String.fromCharCode(((code - 65 + shift) % 26) + 65);
+                    else if ((code >= 97) && (code <= 122))
+                        tempchar = String.fromCharCode(((code - 97 + shift) % 26) + 97);
+                }
+
+                output += tempchar;
+            }
+            return output;
+        }
+
+        document.getElementById("analyze_ciphertext").addEventListener("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            var text = document.getElementById("ciphertext").value;
+            var histogram = createHistogramValues(text);
+
+            document.getElementById("chart_ciphertext").innerHTML = createHTMLTable(histogram);
+        });
+
+        document.getElementById("decrypt").addEventListener("click", function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            var ciphertext = document.getElementById("ciphertext").value;
+            var shift = document.getElementById("backshift").value;
+
+            document.getElementById("ciphertext").innerHTML = createAlphabeticalShift(ciphertext, shift);
+        })
+    </script>
+</body>
+</html>
