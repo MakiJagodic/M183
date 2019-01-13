@@ -1,0 +1,19 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+<div class="row">
+    <div class="col-lg-8 col-lg-offset-2" style="margin-top:60px;">
+        <form class="well" action="~/Home/Login" method="post">
+            <label>Username</label>
+            <input class="form-control" name="username" type="text" />
+            <br /><br />
+            <label>Password</label>
+            <input class="form-control" name="password" type="password" />
+            <br /><br />
+            <label>Token</label>
+            <input class="form-control" name="token" type="text" />
+            <br /><br />
+            <button type="submit" class="btn-primary">Login</button>
+        </form>
+    </div>
+</div>
