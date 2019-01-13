@@ -1,0 +1,13 @@
+﻿
+@{
+    ViewBag.Title = "Feedback";
+}
+<h2>Feedback</h2>
+<div class="row">
+    <form action="./DoFeedback" method="post" class="well col-lg-8 col-lg-offset-2" style="margin-top:60px;">
+        <label>Feedback</label>
+        <textarea name="feedback" class="form-control"></textarea>
+        <input type="submit" name="" value="Log In" class="btn btn-primary" />
+    </form>
+    <div>@ViewBag.Message</div>
+</div>
