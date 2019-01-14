@@ -1,0 +1,7 @@
+Ich weiss nicht wieso, jedoch konnte ich im httpd-vshosts.conf
+File das Attribut "SSLCertificateKeyFile" nicht finden.
+Ich habe jedoch auch die xampp version 7.1.25 genommen, weil die 
+Tutorial Version 7.1.12 nicht mehr zum Download bereit stand auf der
+Seite, wo ich sie gesucht habe.
+
+Könnten Sie sich dies bitte mal anschauen?
